@@ -11,7 +11,7 @@ langgraph==0.0.62
 langchain-core==0.1.52
 
 # OpenAI
-openai==1.6.1
+openai==1.40.0
 
 # Async & Utilities
 httpx==0.25.2

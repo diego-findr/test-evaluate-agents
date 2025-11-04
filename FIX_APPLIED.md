@@ -71,6 +71,7 @@ langchain==0.1.0
 langchain-openai==0.0.2
 langgraph==0.0.20
 langchain-core==0.1.0
+openai==1.6.1
 ```
 
 **After:**
@@ -79,7 +80,21 @@ langchain==0.1.20
 langchain-openai==0.0.8
 langgraph==0.0.62
 langchain-core==0.1.52
+openai==1.40.0
 ```
+
+### 4. Fixed Dependency Conflict
+
+**Problem:** 
+```
+ERROR: Cannot install -r requirements.txt (line 9) and openai==1.6.1 
+because these package versions have conflicting dependencies.
+The conflict is caused by:
+    The user requested openai==1.6.1
+    langchain-openai 0.0.8 depends on openai<2.0.0 and >=1.10.0
+```
+
+**Solution:** Updated `openai` from `1.6.1` to `1.40.0` to satisfy the constraint `>=1.10.0 and <2.0.0`
 
 ---
 
@@ -167,6 +182,7 @@ Other ways this could have been fixed:
 
 2. **requirements.txt**
    - Updated: LangChain/LangGraph versions to latest stable
+   - Fixed: `openai` version from `1.6.1` to `1.40.0` (resolves dependency conflict)
 
 ---
 
