@@ -5,10 +5,10 @@ pydantic==2.5.0
 pydantic-settings==2.1.0
 
 # LangChain & LangGraph
-langchain==0.1.0
-langchain-openai==0.0.2
-langgraph==0.0.20
-langchain-core==0.1.0
+langchain==0.1.20
+langchain-openai==0.0.8
+langgraph==0.0.62
+langchain-core==0.1.52
 
 # OpenAI
 openai==1.6.1

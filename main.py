@@ -26,7 +26,6 @@ from fastapi.responses import JSONResponse
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, END
-from langgraph.graph.graph import CompiledGraph
 from langgraph.checkpoint.memory import MemorySaver
 
 # ============================================================================
@@ -626,7 +625,7 @@ class GraphBuilder:
         self.agent_factory = agent_factory
         logger.info("Initialized GraphBuilder")
     
-    def build_graph(self) -> CompiledGraph:
+    def build_graph(self) -> Any:
         """
         Build and compile the LangGraph workflow.
         
@@ -687,7 +686,7 @@ class GraphBuilder:
 class EvaluationService:
     """Service class for executing the evaluation workflow and building results."""
     
-    def __init__(self, graph: CompiledGraph):
+    def __init__(self, graph: Any):
         self.graph = graph
         logger.info("Initialized EvaluationService")
     
@@ -771,7 +770,7 @@ class DependencyContainer:
     def __init__(self):
         self.llm: Optional[ChatOpenAI] = None
         self.agent_factory: Optional[AgentFactory] = None
-        self.graph: Optional[CompiledGraph] = None
+        self.graph: Optional[Any] = None
         self.evaluation_service: Optional[EvaluationService] = None
     
     async def initialize(self):
