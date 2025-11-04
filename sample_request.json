@@ -1,0 +1,162 @@
+{
+  "offer": {
+    "job_title": "Senior Full-Stack Developer",
+    "company_name": "TechCorp Innovation Labs",
+    "contract": "full-time",
+    "type": "hybrid",
+    "description": "We are seeking an experienced Full-Stack Developer to join our innovative team building next-generation SaaS platforms. The ideal candidate will have strong expertise in modern web technologies, cloud architecture, and agile methodologies.",
+    "salary_range": "€60,000 - €80,000",
+    "responsibilities": "Design and develop scalable web applications, lead technical architecture decisions, mentor junior developers, collaborate with product teams, implement CI/CD pipelines, ensure code quality and best practices.",
+    "experience_required": "5+ years of professional software development experience",
+    "mandatory_skills": [
+      "Python",
+      "React",
+      "Node.js",
+      "PostgreSQL",
+      "AWS",
+      "Docker",
+      "REST APIs"
+    ],
+    "nice_to_have_skills": [
+      "TypeScript",
+      "GraphQL",
+      "Kubernetes",
+      "Redis",
+      "Microservices",
+      "LangChain"
+    ],
+    "mandatory_languages": [
+      "English",
+      "Spanish"
+    ],
+    "nice_to_have_languages": [
+      "German"
+    ],
+    "preferred_companies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Startup experience"
+    ],
+    "extra_requirements_to_consider": "Experience with AI/ML integration is a plus. Must be comfortable with remote collaboration and agile workflows."
+  },
+  "candidate": {
+    "heading": "Senior Full-Stack Engineer | Python & React Specialist | Cloud Architecture",
+    "experience_years": 7,
+    "educations": [
+      {
+        "degree": "Master of Science",
+        "name": "Computer Science",
+        "institute": "Universidad Politécnica de Madrid",
+        "start_date": "2014",
+        "end_date": "2016"
+      },
+      {
+        "degree": "Bachelor of Science",
+        "name": "Software Engineering",
+        "institute": "Universidad Complutense de Madrid",
+        "start_date": "2010",
+        "end_date": "2014"
+      }
+    ],
+    "experiences": [
+      {
+        "role": "Senior Full-Stack Developer",
+        "company": "InnovateTech Solutions",
+        "description": "Led development of cloud-based SaaS platform using Python/Django, React, and AWS. Architected microservices infrastructure with Docker and Kubernetes. Implemented CI/CD pipelines reducing deployment time by 60%. Mentored team of 4 junior developers.",
+        "start_date": "2020-03",
+        "end_date": "2024-10",
+        "duration": "4 years 7 months"
+      },
+      {
+        "role": "Full-Stack Developer",
+        "company": "Digital Ventures Startup",
+        "description": "Built and maintained multiple web applications using Python Flask, React, and PostgreSQL. Integrated third-party APIs and payment gateways. Worked in fast-paced agile environment with 2-week sprints. Reduced page load times by 40% through optimization.",
+        "start_date": "2018-01",
+        "end_date": "2020-02",
+        "duration": "2 years 1 month"
+      },
+      {
+        "role": "Junior Software Developer",
+        "company": "WebDev Consulting",
+        "description": "Developed frontend components with React and backend APIs with Node.js. Participated in code reviews and learned best practices. Worked with MongoDB and MySQL databases. Contributed to 15+ client projects.",
+        "start_date": "2016-06",
+        "end_date": "2017-12",
+        "duration": "1 year 6 months"
+      }
+    ],
+    "skills": [
+      {
+        "name": "Python",
+        "level": "Expert"
+      },
+      {
+        "name": "React",
+        "level": "Expert"
+      },
+      {
+        "name": "Node.js",
+        "level": "Advanced"
+      },
+      {
+        "name": "PostgreSQL",
+        "level": "Advanced"
+      },
+      {
+        "name": "AWS",
+        "level": "Advanced"
+      },
+      {
+        "name": "Docker",
+        "level": "Advanced"
+      },
+      {
+        "name": "TypeScript",
+        "level": "Intermediate"
+      },
+      {
+        "name": "GraphQL",
+        "level": "Intermediate"
+      },
+      {
+        "name": "Kubernetes",
+        "level": "Intermediate"
+      },
+      {
+        "name": "REST APIs",
+        "level": "Expert"
+      },
+      {
+        "name": "CI/CD",
+        "level": "Advanced"
+      },
+      {
+        "name": "Microservices",
+        "level": "Advanced"
+      },
+      {
+        "name": "Git",
+        "level": "Expert"
+      },
+      {
+        "name": "Agile/Scrum",
+        "level": "Advanced"
+      }
+    ],
+    "languages": [
+      {
+        "name": "Spanish",
+        "level": "native"
+      },
+      {
+        "name": "English",
+        "level": "fluent"
+      },
+      {
+        "name": "French",
+        "level": "intermediate"
+      }
+    ]
+  }
+}
