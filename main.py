@@ -18,7 +18,7 @@ from typing import Annotated, Any, Literal, Optional, Sequence
 from contextlib import asynccontextmanager
 import asyncio
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.responses import JSONResponse
@@ -170,7 +170,8 @@ class ScoreOutput(BaseModel):
     score: int = Field(..., ge=0, le=100, description="Compatibility score (0-100)")
     reason: str = Field(..., description="Detailed reasoning for the score")
     
-    @validator('score')
+    @field_validator('score')
+    @classmethod
     def validate_score_range(cls, v):
         if not 0 <= v <= 100:
             raise ValueError('Score must be between 0 and 100')
@@ -195,9 +196,9 @@ class QAAgentOutput(BaseModel):
 class EvaluationState(BaseModel):
     """LangGraph state model tracking the evaluation process."""
     
-    # Input data
-    offer: OfferData
-    candidate: CandidateData
+    # Input data (stored as dicts for LangGraph compatibility)
+    offer: dict[str, Any]
+    candidate: dict[str, Any]
     
     # Evaluation agent outputs
     technical_score: Optional[int] = None
@@ -299,6 +300,10 @@ class AgentFactory:
         Analyzes candidate's technical competencies against job requirements.
         Weight: 50% in final score.
         """
+        # Convert dict to Pydantic models for type-safe access
+        offer = OfferData(**state.offer)
+        candidate = CandidateData(**state.candidate)
+        
         system_prompt = """You are a **Technical Skills Evaluator** specialized in assessing technical competencies.
 
 Your EXCLUSIVE focus areas:
@@ -323,24 +328,24 @@ Provide a score (0-100) and detailed reasoning focusing ONLY on technical aspect
 
         user_prompt = f"""Evaluate the technical compatibility between this candidate and job offer:
 
-**JOB OFFER - {state.offer.job_title} at {state.offer.company_name}**
+**JOB OFFER - {offer.job_title} at {offer.company_name}**
 
 Technical Requirements:
-- Mandatory Skills: {', '.join(state.offer.mandatory_skills) if state.offer.mandatory_skills else 'None specified'}
-- Nice-to-Have Skills: {', '.join(state.offer.nice_to_have_skills) if state.offer.nice_to_have_skills else 'None specified'}
-- Experience Required: {state.offer.experience_required}
-- Responsibilities: {state.offer.responsibilities}
+- Mandatory Skills: {', '.join(offer.mandatory_skills) if offer.mandatory_skills else 'None specified'}
+- Nice-to-Have Skills: {', '.join(offer.nice_to_have_skills) if offer.nice_to_have_skills else 'None specified'}
+- Experience Required: {offer.experience_required}
+- Responsibilities: {offer.responsibilities}
 
 **CANDIDATE PROFILE**
 
-Headline: {state.candidate.heading}
-Experience: {state.candidate.experience_years} years
+Headline: {candidate.heading}
+Experience: {candidate.experience_years} years
 
 Technical Skills:
-{chr(10).join([f"- {skill.name}" + (f" ({skill.level})" if skill.level else "") for skill in state.candidate.skills])}
+{chr(10).join([f"- {skill.name}" + (f" ({skill.level})" if skill.level else "") for skill in candidate.skills])}
 
 Work Experience:
-{chr(10).join([f"- {exp.role} at {exp.company}: {exp.description}" for exp in state.candidate.experiences[:3]])}
+{chr(10).join([f"- {exp.role} at {exp.company}: {exp.description}" for exp in candidate.experiences[:3]])}
 
 Evaluate the technical match and provide your assessment."""
 
@@ -362,6 +367,10 @@ Evaluate the technical match and provide your assessment."""
         Analyzes candidate's career progression and experience relevance.
         Weight: 35% in final score.
         """
+        # Convert dict to Pydantic models for type-safe access
+        offer = OfferData(**state.offer)
+        candidate = CandidateData(**state.candidate)
+        
         system_prompt = """You are a **Career Trajectory Evaluator** specialized in assessing professional growth and experience relevance.
 
 Your EXCLUSIVE focus areas:
@@ -387,25 +396,25 @@ Provide a score (0-100) and detailed reasoning focusing ONLY on career trajector
 
         user_prompt = f"""Evaluate the career trajectory compatibility between this candidate and job offer:
 
-**JOB OFFER - {state.offer.job_title} at {state.offer.company_name}**
+**JOB OFFER - {offer.job_title} at {offer.company_name}**
 
 Position Context:
-- Job Title: {state.offer.job_title}
-- Company: {state.offer.company_name}
-- Experience Required: {state.offer.experience_required}
-- Contract: {state.offer.contract}
-- Preferred Companies: {', '.join(state.offer.preferred_companies) if state.offer.preferred_companies else 'None specified'}
+- Job Title: {offer.job_title}
+- Company: {offer.company_name}
+- Experience Required: {offer.experience_required}
+- Contract: {offer.contract}
+- Preferred Companies: {', '.join(offer.preferred_companies) if offer.preferred_companies else 'None specified'}
 
 **CANDIDATE PROFILE**
 
-Total Experience: {state.candidate.experience_years} years
-Headline: {state.candidate.heading}
+Total Experience: {candidate.experience_years} years
+Headline: {candidate.heading}
 
 Work History:
-{chr(10).join([f"{i+1}. {exp.role} at {exp.company} ({exp.duration if exp.duration else 'Duration not specified'}): {exp.description}" for i, exp in enumerate(state.candidate.experiences)])}
+{chr(10).join([f"{i+1}. {exp.role} at {exp.company} ({exp.duration if exp.duration else 'Duration not specified'}): {exp.description}" for i, exp in enumerate(candidate.experiences)])}
 
 Education:
-{chr(10).join([f"- {edu.degree} in {edu.name} from {edu.institute}" for edu in state.candidate.educations])}
+{chr(10).join([f"- {edu.degree} in {edu.name} from {edu.institute}" for edu in candidate.educations])}
 
 Evaluate the career trajectory match and provide your assessment."""
 
@@ -427,6 +436,10 @@ Evaluate the career trajectory match and provide your assessment."""
         Analyzes candidate's alignment with company culture and work style.
         Weight: 15% in final score.
         """
+        # Convert dict to Pydantic models for type-safe access
+        offer = OfferData(**state.offer)
+        candidate = CandidateData(**state.candidate)
+        
         system_prompt = """You are a **Cultural Fit Evaluator** specialized in assessing work style and organizational alignment.
 
 Your EXCLUSIVE focus areas:
@@ -452,25 +465,25 @@ Provide a score (0-100) and detailed reasoning focusing ONLY on cultural fit asp
 
         user_prompt = f"""Evaluate the cultural fit between this candidate and job offer:
 
-**JOB OFFER - {state.offer.job_title} at {state.offer.company_name}**
+**JOB OFFER - {offer.job_title} at {offer.company_name}**
 
 Work Environment:
-- Company: {state.offer.company_name}
-- Work Type: {state.offer.type}
-- Contract: {state.offer.contract}
-- Mandatory Languages: {', '.join(state.offer.mandatory_languages) if state.offer.mandatory_languages else 'None specified'}
-- Nice-to-Have Languages: {', '.join(state.offer.nice_to_have_languages) if state.offer.nice_to_have_languages else 'None specified'}
-- Description: {state.offer.description[:300]}...
+- Company: {offer.company_name}
+- Work Type: {offer.type}
+- Contract: {offer.contract}
+- Mandatory Languages: {', '.join(offer.mandatory_languages) if offer.mandatory_languages else 'None specified'}
+- Nice-to-Have Languages: {', '.join(offer.nice_to_have_languages) if offer.nice_to_have_languages else 'None specified'}
+- Description: {offer.description[:300]}...
 
 **CANDIDATE PROFILE**
 
 Languages:
-{chr(10).join([f"- {lang.name}: {lang.level}" for lang in state.candidate.languages])}
+{chr(10).join([f"- {lang.name}: {lang.level}" for lang in candidate.languages])}
 
 Work History Context:
-{chr(10).join([f"- {exp.role} at {exp.company}" for exp in state.candidate.experiences[:5]])}
+{chr(10).join([f"- {exp.role} at {exp.company}" for exp in candidate.experiences[:5]])}
 
-Total Experience: {state.candidate.experience_years} years
+Total Experience: {candidate.experience_years} years
 
 Evaluate the cultural and work style compatibility and provide your assessment."""
 
@@ -714,10 +727,10 @@ class EvaluationService:
             logger.info(f"Starting evaluation for {request.offer.job_title} at {request.offer.company_name}")
             
             # Initialize state as EvaluationState instance
-            # (StateGraph(EvaluationState) expects Pydantic model)
+            # Convert Pydantic models to dicts for LangGraph compatibility
             initial_state = EvaluationState(
-                offer=request.offer,
-                candidate=request.candidate
+                offer=request.offer.model_dump(),
+                candidate=request.candidate.model_dump()
             )
             
             # Execute graph
