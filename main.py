@@ -670,12 +670,13 @@ class GraphBuilder:
     
     def _wrap_node(self, agent_func):
         """Wrap agent function to handle state updates properly."""
-        async def wrapped(state: EvaluationState) -> EvaluationState:
-            updates = await agent_func(state)
-            # Update state with new values
-            for key, value in updates.items():
-                setattr(state, key, value)
-            return state
+        async def wrapped(state: dict) -> dict:
+            # Convert dict to Pydantic model
+            state_obj = EvaluationState(**state)
+            # Call agent function
+            updates = await agent_func(state_obj)
+            # Return dict updates
+            return updates
         return wrapped
 
 
@@ -706,15 +707,31 @@ class EvaluationService:
         try:
             logger.info(f"Starting evaluation for {request.offer.job_title} at {request.offer.company_name}")
             
-            # Initialize state
-            initial_state = EvaluationState(
-                offer=request.offer,
-                candidate=request.candidate
-            )
+            # Initialize state as dict
+            initial_state = {
+                "offer": request.offer,
+                "candidate": request.candidate,
+                "technical_score": None,
+                "technical_reason": None,
+                "trajectory_score": None,
+                "trajectory_reason": None,
+                "cultural_score": None,
+                "cultural_reason": None,
+                "final_score": None,
+                "liked": None,
+                "aggregated_reason": None,
+                "qa_required_human_review": None,
+                "qa_note": None,
+                "models_evaluated": 5,
+                "models_liked": 5
+            }
             
             # Execute graph
             config = {"configurable": {"thread_id": "evaluation_001"}}
-            final_state = await self.graph.ainvoke(initial_state, config)
+            final_state_dict = await self.graph.ainvoke(initial_state, config)
+            
+            # Convert result dict to Pydantic model
+            final_state = EvaluationState(**final_state_dict)
             
             # Build result
             result = self._build_result(final_state)
