@@ -735,7 +735,10 @@ class EvaluationService:
             
             # Execute graph
             config = {"configurable": {"thread_id": "evaluation_001"}}
-            final_state = await self.graph.ainvoke(initial_state, config)
+            final_state_dict = await self.graph.ainvoke(initial_state, config)
+            
+            # Convert AddableValuesDict back to EvaluationState for type-safe access
+            final_state = EvaluationState(**final_state_dict)
             
             # Build result
             result = self._build_result(final_state)
